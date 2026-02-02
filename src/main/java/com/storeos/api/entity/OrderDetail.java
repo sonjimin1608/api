@@ -29,9 +29,9 @@ public class OrderDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public OrderDetail(Long quantity, Integer unitPrice, Orders orders, Product product){
+    public OrderDetail(Long quantity, Orders orders, Product product){
         this.quantity = quantity;
-        this.unitPrice = unitPrice;
+        this.unitPrice = product.getProductPrice();
         this.orders = orders;
         this.product = product;
     }

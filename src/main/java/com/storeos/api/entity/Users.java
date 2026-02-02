@@ -21,8 +21,9 @@ public class Users {
     @Column(name = "password",nullable = false)
     private String password;  // 비밀번호
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private String role;      // Manager or Staff
+    private UsersRole usersRole;      // Manager or Staff
 
     // Foreign key 넣는 방법
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,10 +31,10 @@ public class Users {
     private Store store;      // store이라는 객체 생성. 그리고 그 객체 자체를 하나의 데이터로 갖고 있는 것. FK
 
     // 생성자
-    public Users(String loginId, String password, String role, Store store) {
+    public Users(String loginId, String password, UsersRole usersRole, Store store) {
         this.loginId = loginId;
         this.password = password;
-        this.role = role;
+        this.usersRole = usersRole;
         this.store = store;
     }
 }

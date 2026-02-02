@@ -45,11 +45,11 @@ public class Orders{
     private StoreTable storeTable;
 
     // 생성자 아직 store_table 안 만듬 수정 필요
-    public Orders(LocalDateTime orderTime, Long totalAmount, PaymentMethod paymentMethod, PaymentStatus paymentStatus, Store store, Users users, StoreTable storeTable){
-        this.orderTime = orderTime;
+    public Orders(Long totalAmount, PaymentMethod paymentMethod, Store store, Users users, StoreTable storeTable){
+        this.orderTime = LocalDateTime.now();
         this.totalAmount = totalAmount;
         this.paymentMethod = paymentMethod;
-        this.paymentStatus = paymentStatus;
+        this.paymentStatus = PaymentStatus.PENDING;
         this.store = store;
         this.users = users;
         this.storeTable = storeTable;
