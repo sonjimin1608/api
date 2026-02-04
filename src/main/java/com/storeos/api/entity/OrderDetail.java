@@ -16,7 +16,7 @@ public class OrderDetail {
     private Long detailId;
 
     @Column(name = "quantity")
-    private Long quantity;
+    private Integer quantity;
 
     @Column(name = "unit_price")
     private Integer unitPrice;
@@ -29,7 +29,7 @@ public class OrderDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public OrderDetail(Long quantity, Orders orders, Product product){
+    public OrderDetail(Integer quantity, Orders orders, Product product){
         this.quantity = quantity;
         this.unitPrice = product.getProductPrice();
         this.orders = orders;

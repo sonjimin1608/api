@@ -31,10 +31,13 @@ public class Product {
     private Category category;      // category이라는 객체 생성. 그리고 그 객체 자체를 하나의 데이터로 갖고 있는 것. FK
 
     // 생성자
-    public Product(String productName, Integer productPrice, ProductStatus productStatus, Category category) {
+    public Product(String productName, Integer productPrice, Category category) {
         this.productName = productName;
         this.productPrice = productPrice;
-        this.productStatus = productStatus;
+        this.productStatus = ProductStatus.SALE;
         this.category = category;
+    }
+    public void changeProductStatus(ProductStatus status){
+        this.productStatus = status;
     }
 }

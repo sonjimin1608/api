@@ -30,8 +30,21 @@ public class Ingredient {
 
     public Ingredient(String ingredientName, Integer currentStock, String unit, Store store){
         this.ingredientName = ingredientName;
-        this.currentStock = 0;
+        this.currentStock = currentStock;
         this.unit = unit;
         this.store = store;
     }
+
+    public void addStock(Integer amount){
+        this.currentStock += amount;
+    }
+
+    public void removeStock(Integer amount){
+        Integer restStock = this.currentStock - amount;
+        if(restStock < 0){
+            throw new RuntimeException("재료 부족 (현재: " + this.currentStock + ", 필요: " + amount + ")");
+        }
+        this.currentStock = restStock;
+    }
+    
 }

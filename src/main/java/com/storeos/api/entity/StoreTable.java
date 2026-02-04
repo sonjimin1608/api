@@ -38,7 +38,7 @@ public class StoreTable {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    public StoreTable(Integer coordX, Integer coordY, Integer tableWidth, Integer tableHeight, Integer tablePeople, TableStatus tableStatus, Store store){
+    public StoreTable(Integer coordX, Integer coordY, Integer tableWidth, Integer tableHeight, Integer tablePeople, Store store){
         this.coordX = coordX;
         this.coordY = coordY;
         this.tableWidth = tableWidth;

@@ -2,10 +2,13 @@ package com.storeos.api.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
+import com.storeos.api.entity.StoreStatus;
 
 @Entity                        // "이건 DB 테이블이야!"
 @Getter                        // "데이터 조회 기능 자동 생성"
+@Setter
 @Table(name = "store")         // "DB에는 'store'라는 이름으로 만들어줘"
 @NoArgsConstructor             // "기본 생성자 필수"
 public class Store {
@@ -24,10 +27,11 @@ public class Store {
     @Column(name = "owner_name", nullable = false)
     private String ownerName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status;     // OPEN / CLOSE
+    private StoreStatus storeStatus;     // OPEN / CLOSE
 
-    @Column(name = "congestion_level")
+    @Column(name = "congestion_level", nullable = false)
     private Integer congestionLevel; // 0 ~ 100
 
     // 생성자
@@ -35,7 +39,13 @@ public class Store {
         this.storeName = storeName;
         this.businessNumber = businessNumber;
         this.ownerName = ownerName;
-        this.status = "OPEN";
+        this.storeStatus = StoreStatus.OPEN;
         this.congestionLevel = 0;
+    }
+
+    public void updateInfo(String storeName, String businessNum, String ownerName){
+        this.storeName = storeName;
+        this.businessNumber = businessNum;
+        this.ownerName = ownerName;
     }
 }

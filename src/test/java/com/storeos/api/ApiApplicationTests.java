@@ -3,6 +3,7 @@ package com.storeos.api;
 import com.storeos.api.entity.*;
 import com.storeos.api.repository.*;
 import org.junit.jupiter.api.Test;
+import com.storeos.api.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -14,7 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Rollback(false) // 🚨 눈으로 확인해야 하니까 지우지 말고 DB에 남겨놔! (공부용 설정)
 
 class ApiApplicationTests {
-
+	//서비스 autowire
+	@Autowired OrderService orderService;
+	@Autowired UserService userService;
+	//레포지토리 autowire
 	@Autowired StoreRepository storeRepository;
     @Autowired UsersRepository usersRepository;
     @Autowired StoreTableRepository storeTableRepository;
@@ -26,19 +30,23 @@ class ApiApplicationTests {
     @Autowired RecipeRepository recipeRepository;
 
 	@Test
-	void contextLoads() {
+	void serviceTest() {
 		// 1. 매장 등록 시나리오
 		Store store = new Store("스타벅스 강남점", "123-45-67890", "손지민");
 		storeRepository.save(store);
 		System.out.println("1. 매장 등록 완료 " + store.getStoreName());
 
 		// 2. 직원 채용
-		Users staff = new Users("worker1", "1234", UsersRole.STAFF, store);
-		usersRepository.save(staff);
-		System.out.println("2. 직원 채용 완료 : " + staff.getLoginId());
+		String loginId = userService.registerUser("손지민", "jamie1608", "1234", UsersRole.OWNER, store.getStoreId());
+		System.out.println("2. 직원 채용 완료 : " + loginId);
+		
+		// 등록된 직원 조회
+		Users users = usersRepository.findByLoginId(loginId).orElseThrow();
+
+		
 
 		// 3. 테이블 배치
-		StoreTable table = new StoreTable(10,10,100,100, 4, TableStatus.EMPTY, store);
+		StoreTable table = new StoreTable(10,10,100,100, 4, store);
 		storeTableRepository.save(table);
 		System.out.println("3. 테이블 배치 완료 : " + table.getTableId() + "번 테이블");
 
@@ -55,7 +63,7 @@ class ApiApplicationTests {
 		productRepository.save(americano);
 		System.out.println("4-3. 아메리카노 등록 완료 : \n 분류 : " + americano.getCategory());
 
-		//5. 재료 & 레시피등록
+		// 5. 재료 & 레시피등록
 
 		Ingredient bean = new Ingredient("에티오피아 원두", 1000, "g", store);
         ingredientRepository.save(bean);
@@ -66,14 +74,17 @@ class ApiApplicationTests {
         System.out.println("✅ 5-2. 레시피 등록: 아메리카노엔 원두 20g이 들어갑니다.");
 
 		// 6. 주문서 생성
-		Orders orders = new Orders(1L, PaymentMethod.CARD, store, staff, table);
-		ordersRepository.save(orders);
-		System.out.println("6. 주문 생성 : " + orders.getOrderId() + "번 주문");
+		Long orderId = orderService.createOrder(
+			store.getStoreId(),
+			users.getUserId(),
+			table.getTableId(),
+			PaymentMethod.CARD
+		);
+		System.out.println("6. 주문 생성 : " + orderId + "번 주문");
 
 		// 7. 주문서 상세 내용 적기
-		OrderDetail detail = new OrderDetail(2L, orders, americano);
-		orderDetailRepository.save(detail);
-		System.out.println("6. 주문 상세 내용 적기 : " + detail.getOrders().getOrderId() + "번 주문\n" + 
+		orderService.AdditemToOrder(2L, orderId, americano.getProductId());;
+		System.out.println("6. 주문 상세 내용 적기 : " + orderId + "번 주문\n" + 
 							bean.getIngredientName() + americanoRecipe.getQuantity() + bean.getUnit() + "소진됨");
 
 
