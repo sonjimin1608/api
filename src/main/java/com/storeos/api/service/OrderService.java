@@ -1,5 +1,7 @@
 package com.storeos.api.service;
 
+import com.storeos.api.dto.CreateOrderRequest;
+import com.storeos.api.dto.AddItemRequest;
 import com.storeos.api.entity.*;
 import com.storeos.api.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,11 @@ public class OrderService {
 
     // 1. 주문 생성 (빈 주문서 만들기)
     @Transactional
-    public Long createOrder(Long storeId, Long userId, Long tableId, PaymentMethod paymentMethod) {
+    public Long createOrder(CreateOrderRequest dto) {
 
-        Store store = storeRepository.findById(storeId).orElseThrow(() -> new RuntimeException("매장 없음"));
-        Users users = usersRepository.findById(userId).orElseThrow(() -> new RuntimeException("직원 없음"));
-        StoreTable storeTable = storeTableRepository.findById(tableId).orElseThrow(() -> new RuntimeException("테이블 없음"));
+        Store store = storeRepository.findById(dto.getStoreId()).orElseThrow(() -> new RuntimeException("매장 없음"));
+        Users users = usersRepository.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("직원 없음"));
+        StoreTable storeTable = storeTableRepository.findById(dto.getTableId()).orElseThrow(() -> new RuntimeException("테이블 없음"));
 
         Orders orders = new Orders(store, users, storeTable);
         ordersRepository.save(orders);
@@ -34,14 +36,14 @@ public class OrderService {
     }
     // 2. 주문에 상품 담기
     @Transactional
-    public void additemToOrder(Integer quantity, Long orderId, Long productId){
+    public void addItemToOrder(AddItemRequest dto, Long orderId){
         Orders orders = ordersRepository.findById(orderId).orElseThrow(() -> new RuntimeException("주문 없음"));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("상품 없음"));
+        Product product = productRepository.findById(dto.getProductId()).orElseThrow(() -> new RuntimeException("상품 없음"));
 
-        OrderDetail orderDetail = new OrderDetail(quantity, orders, product);
+        OrderDetail orderDetail = new OrderDetail(dto.getQuantity(), orders, product);
         orderDetailRepository.save(orderDetail);
 
-        inventoryService.decreaseStock(productId, quantity);
+        inventoryService.decreaseStock(dto.getProductId(), dto.getQuantity());
     }
     // 3. 결제하기
     @Transactional

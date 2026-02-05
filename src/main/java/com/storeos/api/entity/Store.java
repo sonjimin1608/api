@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
-import com.storeos.api.entity.StoreStatus;
 
 @Entity                        // "이건 DB 테이블이야!"
 @Getter                        // "데이터 조회 기능 자동 생성"
