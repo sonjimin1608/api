@@ -2,7 +2,8 @@ package com.storeos.api.service;
 
 import com.storeos.api.entity.*;
 import com.storeos.api.repository.*;
-import com.storeos.api.dto.*;
+import com.storeos.api.dto.CreateCategoryRequest;
+import com.storeos.api.dto.CreateProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

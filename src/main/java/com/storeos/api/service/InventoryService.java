@@ -2,7 +2,8 @@ package com.storeos.api.service;
 
 import com.storeos.api.entity.*;
 import com.storeos.api.repository.*;
-import com.storeos.api.dto.*;
+import com.storeos.api.dto.CreateIngredientRequest;
+import com.storeos.api.dto.CreateRecipeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

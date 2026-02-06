@@ -2,7 +2,8 @@ package com.storeos.api.service;
 
 import com.storeos.api.entity.*;
 import com.storeos.api.repository.*;
-import com.storeos.api.dto.*;
+import com.storeos.api.dto.CreateUserRequest;
+import com.storeos.api.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +16,12 @@ public class UserService {
     private final StoreRepository storeRepository;
     // 1. 직원 채용 (회원가입)
     @Transactional
-    public String registerUser(String userName, String loginId, String password, UsersRole usersRole, Long storeId){
+    public String registerUser(CreateUserRequest dto, Long storeId){
         Store store = storeRepository.findById(storeId).orElseThrow(() -> new RuntimeException("가게 없음"));
-        Users users = new Users(userName, loginId, password, usersRole, store);
+        Users users = new Users(dto.getUserName(), dto.getLoginId(), dto.getPassword(), dto.getUsersRole(), store);
 
         usersRepository.save(users);
-        return loginId;
+        return dto.getLoginId();
     }  
     // 2. 로그인 (인증)
     public LoginResponse loginUser(String loginId, String password, Long storeId){
