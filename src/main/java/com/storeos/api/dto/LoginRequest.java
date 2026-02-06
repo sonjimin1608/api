@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddItemRequest {
-    private Long productId;
-    private Integer quantity;
+public class LoginRequest {
+    private String loginId;
+    private String password;
 }
