@@ -10,5 +10,6 @@ public class LoginResponse {
     private String userName;
     private Long userId;
     private UsersRole role;
+    private Long storeId;
     // 나중엔 여기에 "토큰(Token)"이 들어감
 }

@@ -32,7 +32,8 @@ public class UserService {
         return new LoginResponse(
             users.getUserName(),
             users.getUserId(),
-            users.getUsersRole()
+            users.getUsersRole(),
+            users.getStore().getStoreId()
         );
     }
 }
