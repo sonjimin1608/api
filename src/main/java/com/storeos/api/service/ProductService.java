@@ -17,7 +17,7 @@ public class ProductService {
     private final StoreRepository storeRepository;
 
     @Transactional
-    public Long createCategory(CategoryDto dto, Long storeId){
+    public Long createCategory(CreateCategoryRequest dto, Long storeId){
         Store store = storeRepository.findById(storeId).orElseThrow(() -> new RuntimeException("가게 없음"));
         Category category = new Category(dto.getCategoryName(), store);
         categoryRepository.save(category);
@@ -26,7 +26,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Long registerProduct(ProductDto dto, Long CategoryId){
+    public Long registerProduct(CreateProductRequest dto, Long CategoryId){
         Category category = categoryRepository.findById(CategoryId).orElseThrow(() -> new RuntimeException("카테고리 없음"));
         Product product = new Product(
             dto.getProductName(),

@@ -23,12 +23,12 @@ public class UserService {
         return loginId;
     }  
     // 2. 로그인 (인증)
-    public LoginResponseDto loginUser(String loginId, String password, Long storeId){
+    public LoginResponse loginUser(String loginId, String password, Long storeId){
         Users users = usersRepository.findByLoginId(loginId).orElseThrow(() -> new RuntimeException("아이디 없음"));
         if (!users.getPassword().equals(password)){
             throw new RuntimeException("비밀번호가 틀렸습니다.");
         }
-        return new LoginResponseDto(
+        return new LoginResponse(
             users.getUserName(),
             users.getUserId(),
             users.getUsersRole()

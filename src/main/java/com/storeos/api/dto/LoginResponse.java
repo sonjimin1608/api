@@ -6,7 +6,7 @@ import com.storeos.api.entity.UsersRole;
 
 @Data
 @AllArgsConstructor
-public class LoginResponseDto {
+public class LoginResponse {
     private String userName;
     private Long userId;
     private UsersRole role;

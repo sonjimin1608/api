@@ -1,7 +1,7 @@
 package com.storeos.api.controller;
 
-import com.storeos.api.dto.CategoryDto;
-import com.storeos.api.dto.ProductDto;
+import com.storeos.api.dto.CreateCategoryRequest;
+import com.storeos.api.dto.CreateProductRequest;
 import com.storeos.api.entity.ProductStatus;
 import com.storeos.api.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class ProductController {
     // 1. 카테고리 생성
     @PostMapping("/stores/{storeId}/categories")
     public ResponseEntity<Long> createCategory(@PathVariable Long storeId,
-                                               @RequestBody CategoryDto dto) {
+                                               @RequestBody CreateCategoryRequest dto) {
         Long categoryId = productService.createCategory(dto, storeId);
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryId);
     }
@@ -27,7 +27,7 @@ public class ProductController {
     // 2. 상품 등록
     @PostMapping("/categories/{categoryId}/products")
     public ResponseEntity<Long> registerProduct(@PathVariable Long categoryId,
-                                                @RequestBody ProductDto dto) {
+                                                @RequestBody CreateProductRequest dto) {
         Long productId = productService.registerProduct(dto, categoryId);
         return ResponseEntity.status(HttpStatus.CREATED).body(productId);
     }

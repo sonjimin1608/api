@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor // 기본 생성자 (나중에 JSON 변환할 때 필수)
-public class ProductDto {
-    private String productName;
-    private Integer productPrice;
+public class CreateCategoryRequest {
+    private String categoryName;
 }
