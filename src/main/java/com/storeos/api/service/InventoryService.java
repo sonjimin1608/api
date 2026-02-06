@@ -20,7 +20,7 @@ public class InventoryService {
     private final StoreRepository storeRepository;
 
     @Transactional
-    public Long registerIngredient(IngredientDto dto, Long storeId){
+    public Long registerIngredient(CreateIngredientRequest dto, Long storeId){
         Store store = storeRepository.findById(storeId).orElseThrow(() -> new RuntimeException("가게 없음"));
         Ingredient ingredient = new Ingredient(dto.getIngredientName(), dto.getCurrentStock(), dto.getUnit(), store);
 
@@ -35,7 +35,7 @@ public class InventoryService {
     }
 
     @Transactional
-    public Long createRecipe(RecipeDto dto){
+    public Long createRecipe(CreateRecipeRequest dto){
         Product product = productRepository.findById(dto.getProductId()).orElseThrow(() -> new RuntimeException("상품 없음"));
         Ingredient ingredient = ingredientRepository.findById(dto.getIngredientId()).orElseThrow(() -> new RuntimeException("재료 없음"));
         Recipe recipe = new Recipe(dto.getQuantity(), product, ingredient);
