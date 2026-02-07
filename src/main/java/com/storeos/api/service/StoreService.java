@@ -23,7 +23,7 @@ public class StoreService {
     public Long registerStore(CreateStoreRequest dto){
         Store store = new Store(
             dto.getStoreName(),
-            dto.getBusinessNum(),
+            dto.getBusinessNumber(),
             dto.getOwnerName()
         );
 
@@ -47,7 +47,7 @@ public class StoreService {
     public void updateStoreInfo(UpdateStoreRequest dto, Long storeId){
         Store store = storeRepository.findById(storeId).orElseThrow(() -> new RuntimeException("가게 없음"));
         
-        store.updateInfo(dto.getStoreName(), dto.getBusinessNum(), dto.getOwnerName());
+        store.updateInfo(dto.getStoreName(), dto.getBusinessNumber(), dto.getOwnerName());
 
     }
 }

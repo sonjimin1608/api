@@ -70,7 +70,7 @@ class StoreControllerTest {
 
         // 2. 실행 (PUT 요청)
         // 아까 우리가 PUT으로 바꿨던 URL 기억나시죠?
-        mockMvc.perform(put("/api/v1/stores/" + savedStoreId)
+        mockMvc.perform(put("/api/v1/stores/" + savedStoreId + "/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk()) // 200 OK 여야 해

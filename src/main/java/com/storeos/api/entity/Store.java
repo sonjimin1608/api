@@ -42,9 +42,9 @@ public class Store {
         this.congestionLevel = 0;
     }
 
-    public void updateInfo(String storeName, String businessNum, String ownerName){
+    public void updateInfo(String storeName, String businessNumber, String ownerName){
         this.storeName = storeName;
-        this.businessNumber = businessNum;
+        this.businessNumber = businessNumber;
         this.ownerName = ownerName;
     }
 }
