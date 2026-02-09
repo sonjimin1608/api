@@ -36,3 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 src/main/resources/application.properties
+
+### Node ###
+node_modules/
+npm-debug.log*
+package-lock.json
+package.json
