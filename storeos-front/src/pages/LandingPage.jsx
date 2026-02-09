@@ -81,7 +81,7 @@ const styles = {
   logo: {
     fontSize: '28px',
     fontWeight: '700',
-    color: '#1a1a1a',
+    color: '#007bff',
     cursor: 'pointer',
     margin: 0,
   },
@@ -91,12 +91,12 @@ const styles = {
   },
   loginBtn: {
     padding: '10px 20px',
-    border: '1px solid #d0d0d0',
+    border: '1px solid #007bff',
     borderRadius: '6px',
     backgroundColor: '#ffffff',
     cursor: 'pointer',
     fontSize: '15px',
-    color: '#333',
+    color: '#007bff',
     fontWeight: '500',
     transition: 'all 0.2s',
   },
@@ -120,7 +120,7 @@ const styles = {
   welcomeTitle: {
     fontSize: '42px',
     fontWeight: '700',
-    color: '#1a1a1a',
+    color: '#007bff',
     marginBottom: '20px',
   },
   welcomeDesc: {
