@@ -136,27 +136,40 @@ function SignupPage() {
     if (!validate()) return;
 
     try {
-      let endpoint, requestData;
+      let endpoint, response;
 
       if (selectedRole === 'MANAGER') {
         endpoint = '/signup/manager';
-        requestData = {
-          user: {
-            userName: formData.userName,
-            loginId: formData.loginId,
-            password: formData.password,
-            usersRole: 'MANAGER'
-          },
-          store: {
-            storeName: storeInfo.storeName,
-            businessNumber: storeInfo.businessNumber,
-            managerName: storeInfo.managerName
-          },
-          verificationImageUrl: imagePreview
-        };
+        
+        // FormData 생성
+        const formDataToSend = new FormData();
+        
+        // user 데이터를 JSON으로 추가
+        formDataToSend.append('user', new Blob([JSON.stringify({
+          userName: formData.userName,
+          loginId: formData.loginId,
+          password: formData.password,
+          usersRole: 'MANAGER'
+        })], { type: 'application/json' }));
+        
+        // store 데이터를 JSON으로 추가
+        formDataToSend.append('store', new Blob([JSON.stringify({
+          storeName: storeInfo.storeName,
+          businessNumber: storeInfo.businessNumber,
+          managerName: storeInfo.managerName
+        })], { type: 'application/json' }));
+        
+        // 파일 추가
+        formDataToSend.append('verificationImage', verificationImage);
+        
+        response = await api.post(endpoint, formDataToSend, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
       } else {
         endpoint = '/signup/staff';
-        requestData = {
+        const requestData = {
           user: {
             userName: formData.userName,
             loginId: formData.loginId,
@@ -165,9 +178,9 @@ function SignupPage() {
           },
           storeCode: storeCode
         };
+        response = await api.post(endpoint, requestData);
       }
 
-      const response = await api.post(endpoint, requestData);
       alert(response.data);
       navigate('/');
     } catch (error) {

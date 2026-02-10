@@ -34,9 +34,8 @@ public class Users {
     @Column(name = "approval_status", nullable = false)
     private ApprovalStatus approvalStatus; // PENDING, APPROVED, REJECTED
 
-    @Lob
-    @Column(name = "verification_image_url", columnDefinition = "LONGTEXT")
-    private String verificationImageUrl; // 증빙 사진 URL (base64 이미지 데이터)
+    @Column(name = "verification_image_url")
+    private String verificationImageUrl; // 증빙 사진 파일 경로
 
     // Foreign key 넣는 방법
     @ManyToOne(fetch = FetchType.LAZY)

@@ -123,7 +123,7 @@ function AdminApprovalPage() {
                       <div style={styles.imageSection}>
                         <h4 style={styles.sectionTitle}>사업 등록증</h4>
                         <img 
-                          src={manager.verificationImageUrl} 
+                          src={`http://localhost:8080${manager.verificationImageUrl}`} 
                           alt="사업 등록증" 
                           style={styles.verificationImage}
                         />
