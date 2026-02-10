@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class UpdateStoreRequest {
     private String storeName;
     private String businessNumber;
-    private String ownerName;
+    private String managerName;
     // 나중에 주소, 전화번호 등 추가될 때 여기만 늘리면 됨
 }

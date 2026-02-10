@@ -7,7 +7,7 @@ function App() {
   const [formData, setFormData] = useState({
     storeName: '',
     businessNumber: '',
-    ownerName: ''
+    managerName: ''
   });
 
   // 2. 입력값이 바뀔 때마다 상태 업데이트
@@ -58,8 +58,8 @@ function App() {
         <div>
           <label>사장님 성함: </label>
           <input 
-            name="ownerName" 
-            value={formData.ownerName} 
+            name="managerName" 
+            value={formData.managerName} 
             onChange={handleChange} 
             placeholder="홍길동" 
           />

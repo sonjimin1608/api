@@ -1,6 +1,6 @@
 package com.storeos.api.entity;
 
 public enum UsersRole {
-    OWNER,
+    MANAGER,
     STAFF
 }

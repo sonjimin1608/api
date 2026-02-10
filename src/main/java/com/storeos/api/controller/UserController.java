@@ -3,7 +3,8 @@ package com.storeos.api.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.storeos.api.dto.CreateUserRequest;
+import com.storeos.api.dto.ManagerSignupRequest;
+import com.storeos.api.dto.StaffSignupRequest;
 import com.storeos.api.dto.LoginResponse;
 import com.storeos.api.dto.LoginRequest;
 import com.storeos.api.service.UserService;
@@ -24,30 +25,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/v1")
-@CrossOrigin(origins = "http://localhost:5173") // 👈 이거 추가! (프론트 주소 허용)
+@CrossOrigin(origins = "http://localhost:5173")
 @RequiredArgsConstructor
 
 public class UserController {
 
     private final UserService userService;
     
-    // 1. 유저 생성
-    @PostMapping("/storeos/{storeId}/users")
-    public ResponseEntity<String> registerUser(@RequestBody CreateUserRequest dto,
-                                             @PathVariable Long storeId) {
-        
-        String loginId = userService.registerUser(dto, storeId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(loginId);
+    // 1. 관리자 회원가입 (가게 정보 포함)
+    @PostMapping("/signup/manager")
+    public ResponseEntity<String> registerManager(@RequestBody ManagerSignupRequest dto) {
+        String message = userService.registerManager(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
 
-    // 2. 로그인 (인증)
+    // 2. 직원 회원가입 (가게 코드로 가입)
+    @PostMapping("/signup/staff")
+    public ResponseEntity<String> registerStaff(@RequestBody StaffSignupRequest dto) {
+        String message = userService.registerStaff(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
+    }
+
+    // 3. 로그인 (인증)
     @GetMapping("/login")
-    public ResponseEntity<LoginResponse> loginUser(@PathVariable Long storeId,
-                                                   @RequestBody LoginRequest dto) {
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest dto) {
         LoginResponse loginResponse = userService.loginUser(dto);
         return ResponseEntity.ok(loginResponse);
     }
-    
     
 
 }

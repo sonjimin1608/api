@@ -30,6 +30,13 @@ public class Users {
     @Column(name = "role", nullable = false)
     private UsersRole usersRole;      // Manager or Staff
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "approval_status", nullable = false)
+    private ApprovalStatus approvalStatus; // PENDING, APPROVED, REJECTED
+
+    @Column(name = "verification_image_url")
+    private String verificationImageUrl; // 증빙 사진 URL
+
     // Foreign key 넣는 방법
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
@@ -41,6 +48,7 @@ public class Users {
         this.loginId = loginId;
         this.password = password;
         this.usersRole = usersRole;
+        this.approvalStatus = ApprovalStatus.PENDING; // 기본값: 대기 중
         this.store = store;
     }
 }

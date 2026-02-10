@@ -29,11 +29,11 @@ public class StoreController {
 
     // 1. 가게 생성
     @PostMapping("/stores")
-    public ResponseEntity<Long> registerStore(@RequestBody CreateStoreRequest dto) {
+    public ResponseEntity<String> registerStore(@RequestBody CreateStoreRequest dto) {
         
-        Long storeId = storeService.registerStore(dto);
+        String storeCode = storeService.registerStore(dto);
         
-        return ResponseEntity.status(HttpStatus.CREATED).body(storeId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(storeCode);
     }
     
     // 2. 테이블 생성

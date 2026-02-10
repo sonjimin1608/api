@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import LandingPage from './pages/LandingPage'; // 새로 만든 파일
-import SignupPage from './pages/SignupPage';   // 기존 회원가입
-import StorePage from './pages/StorePage';     // 기존 가게등록
+import LandingPage from './pages/LandingPage';
+import SignupPage from './pages/SignupPage';
+import StorePage from './pages/StorePage';
+import AdminApprovalPage from './pages/AdminApprovalPage';
+import ManagerApprovalPage from './pages/ManagerApprovalPage';
 
 function App() {
   return (
@@ -15,6 +17,12 @@ function App() {
 
         {/* 3. 가게 등록 화면 */}
         <Route path="/store" element={<StorePage />} />
+
+        {/* 4. 관리자 승인 화면 (Admin only) */}
+        <Route path="/admin/approvals" element={<AdminApprovalPage />} />
+
+        {/* 5. 매니저 직원 승인 화면 (Manager only) */}
+        <Route path="/manager/approvals" element={<ManagerApprovalPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -17,14 +17,17 @@ public class Store {
     @Column(name = "store_id")
     private Long storeId;      // PK
 
+    @Column(name = "store_code", unique = true, nullable = false, length = 10)
+    private String storeCode; // 가게 고유 코드 (예: ST12345)
+
     @Column(name = "store_name", nullable = false)
     private String storeName;
 
     @Column(name = "business_number", length = 20, nullable = false)
     private String businessNumber; // 사업자 번호 (문자열)
 
-    @Column(name = "owner_name", nullable = false)
-    private String ownerName;
+    @Column(name = "manager_name", nullable = false)
+    private String managerName;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -34,17 +37,18 @@ public class Store {
     private Integer congestionLevel; // 0 ~ 100
 
     // 생성자
-    public Store(String storeName, String businessNumber, String ownerName) {
+    public Store(String storeCode, String storeName, String businessNumber, String managerName) {
+        this.storeCode = storeCode;
         this.storeName = storeName;
         this.businessNumber = businessNumber;
-        this.ownerName = ownerName;
+        this.managerName = managerName;
         this.storeStatus = StoreStatus.OPEN;
         this.congestionLevel = 0;
     }
 
-    public void updateInfo(String storeName, String businessNumber, String ownerName){
+    public void updateInfo(String storeName, String businessNumber, String managerName){
         this.storeName = storeName;
         this.businessNumber = businessNumber;
-        this.ownerName = ownerName;
+        this.managerName = managerName;
     }
 }
