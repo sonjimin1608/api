@@ -1,15 +1,14 @@
-package com.storeos.api.dto; // dto 패키지 하나 만들면 좋아
+package com.storeos.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import com.storeos.api.entity.UsersRole;
 
 @Data
 @AllArgsConstructor
 public class LoginResponse {
     private String userName;
     private Long userId;
-    private UsersRole role;
+    private String role; // "ADMIN", "MANAGER", "STAFF"
     private Long storeId;
     // 나중엔 여기에 "토큰(Token)"이 들어감
 }

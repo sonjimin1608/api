@@ -17,6 +17,7 @@ public class UserService {
     private final UsersRepository usersRepository;
     private final StoreRepository storeRepository;
     private final StoreService storeService;
+    private final AdminRepository adminRepository;
     
     // 1. 관리자 회원가입 (가게 생성 + 관리자 생성, Admin 승인 필요)
     @Transactional
@@ -33,10 +34,9 @@ public class UserService {
             dto.getUser().getLoginId(),
             dto.getUser().getPassword(),
             UsersRole.MANAGER,
+            dto.getVerificationImageUrl(),
             store
         );
-        manager.setVerificationImageUrl(dto.getVerificationImageUrl());
-        manager.setApprovalStatus(ApprovalStatus.PENDING);
         
         usersRepository.save(manager);
         
@@ -55,6 +55,7 @@ public class UserService {
             dto.getUser().getLoginId(),
             dto.getUser().getPassword(),
             UsersRole.STAFF,
+            null,
             store
         );
         staff.setApprovalStatus(ApprovalStatus.PENDING);
@@ -66,6 +67,22 @@ public class UserService {
     
     // 3. 로그인 (인증)
     public LoginResponse loginUser(LoginRequest dto){
+        // 먼저 Admin 테이블에서 확인
+        var adminOptional = adminRepository.findByLoginId(dto.getLoginId());
+        if (adminOptional.isPresent()) {
+            Admin admin = adminOptional.get();
+            if (!admin.getPassword().equals(dto.getPassword())) {
+                throw new RuntimeException("비밀번호가 틀렸습니다.");
+            }
+            return new LoginResponse(
+                "관리자",
+                admin.getAdminId(),
+                "ADMIN",
+                null  // Admin은 store가 없음
+            );
+        }
+        
+        // Admin이 아니면 Users 테이블에서 확인
         Users users = usersRepository.findByLoginId(dto.getLoginId())
             .orElseThrow(() -> new RuntimeException("아이디 없음"));
             
@@ -73,16 +90,15 @@ public class UserService {
             throw new RuntimeException("비밀번호가 틀렸습니다.");
         }
         
-        // 승인되지 않은 사용자는 로그인 불가 (admin 제외)
-        if (!users.getLoginId().equals("admin") && 
-            users.getApprovalStatus() != ApprovalStatus.APPROVED) {
+        // 승인되지 않은 사용자는 로그인 불가
+        if (users.getApprovalStatus() != ApprovalStatus.APPROVED) {
             throw new RuntimeException("승인 대기 중입니다. 관리자 승인 후 로그인해주세요.");
         }
         
         return new LoginResponse(
             users.getUserName(),
             users.getUserId(),
-            users.getUsersRole(),
+            users.getUsersRole().toString(),
             users.getStore().getStoreId()
         );
     }

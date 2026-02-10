@@ -76,6 +76,28 @@ function AdminApprovalPage() {
 
                   <div style={styles.cardBody}>
                     <div style={styles.infoSection}>
+                      <h4 style={styles.sectionTitle}>사용자 정보</h4>
+                      <div style={styles.infoGrid}>
+                        <div style={styles.infoItem}>
+                          <span style={styles.infoLabel}>사용자 ID</span>
+                          <span style={styles.infoValue}>{manager.userId}</span>
+                        </div>
+                        <div style={styles.infoItem}>
+                          <span style={styles.infoLabel}>로그인 ID</span>
+                          <span style={styles.infoValue}>{manager.loginId}</span>
+                        </div>
+                        <div style={styles.infoItem}>
+                          <span style={styles.infoLabel}>이름</span>
+                          <span style={styles.infoValue}>{manager.userName}</span>
+                        </div>
+                        <div style={styles.infoItem}>
+                          <span style={styles.infoLabel}>역할</span>
+                          <span style={styles.infoValue}>관리자</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={styles.infoSection}>
                       <h4 style={styles.sectionTitle}>가게 정보</h4>
                       <div style={styles.infoGrid}>
                         <div style={styles.infoItem}>

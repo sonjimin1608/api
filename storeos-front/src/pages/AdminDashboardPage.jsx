@@ -1,23 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function LandingPage() {
+function AdminDashboardPage() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
-  // 페이지 로드시 로그인 상태 확인
   useEffect(() => {
+    // 로그인 상태 확인
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const userData = JSON.parse(storedUser);
+      setUser(userData);
+      
+      // ADMIN 권한 확인
+      if (userData.role !== 'ADMIN') {
+        alert('관리자만 접근할 수 있습니다');
+        navigate('/');
+      }
+    } else {
+      alert('로그인이 필요합니다');
+      navigate('/login');
     }
-  }, []);
+  }, [navigate]);
 
-  // 로그아웃 처리
   const handleLogout = () => {
     localStorage.removeItem('user');
     setUser(null);
     alert('로그아웃되었습니다');
+    navigate('/');
   };
 
   return (
@@ -26,35 +36,21 @@ function LandingPage() {
       <header style={styles.header}>
         <div style={styles.headerInner}>
           {/* 좌측 상단: Store POS */}
-          <h1 style={styles.logo} onClick={() => navigate('/')}>
+          <h1 style={styles.logo} onClick={() => navigate('/admin')}>
             Store POS
           </h1>
 
-          {/* 우측 상단: 로그인 / 회원가입 또는 사용자 정보 / 로그아웃 */}
+          {/* 우측 상단: 사용자 정보 / 로그아웃 */}
           <div style={styles.authNav}>
-            {user ? (
+            {user && (
               <>
+                <span style={styles.adminBadge}>관리자</span>
                 <span style={styles.userName}>{user.userName}님</span>
                 <button 
                   style={styles.logoutBtn} 
                   onClick={handleLogout}
                 >
                   로그아웃
-                </button>
-              </>
-            ) : (
-              <>
-                <button 
-                  style={styles.loginBtn} 
-                  onClick={() => navigate('/login')}
-                >
-                  로그인
-                </button>
-                <button 
-                  style={styles.signupBtn} 
-                  onClick={() => navigate('/signup')}
-                >
-                  회원가입
                 </button>
               </>
             )}
@@ -66,21 +62,15 @@ function LandingPage() {
       <main style={styles.main}>
         <h2 style={styles.welcomeTitle}>Store POS에 오신 것을 환영합니다</h2>
         <p style={styles.welcomeDesc}>
-          간편하게 매장을 관리하고 판매를 기록하세요
+          관리자 페이지에서 가게 관리자 승인을 처리하세요
         </p>
         
         <div style={styles.buttonGroup}>
           <button 
             style={styles.primaryBtn}
-            onClick={() => navigate('/store')}
+            onClick={() => navigate('/admin/approvals')}
           >
-            가게 등록하기
-          </button>
-          <button 
-            style={styles.secondaryBtn}
-            onClick={() => alert('대시보드 기능은 준비중입니다')}
-          >
-            둘러보기
+            승인 대기 관리자 조회
           </button>
         </div>
       </main>
@@ -120,21 +110,18 @@ const styles = {
     gap: '12px',
     alignItems: 'center',
   },
+  adminBadge: {
+    padding: '6px 12px',
+    backgroundColor: '#007bff',
+    color: '#ffffff',
+    borderRadius: '4px',
+    fontSize: '13px',
+    fontWeight: '600',
+  },
   userName: {
     fontSize: '15px',
     color: '#333',
     fontWeight: '500',
-  },
-  loginBtn: {
-    padding: '10px 20px',
-    border: '1px solid #007bff',
-    borderRadius: '6px',
-    backgroundColor: '#ffffff',
-    cursor: 'pointer',
-    fontSize: '15px',
-    color: '#007bff',
-    fontWeight: '500',
-    transition: 'all 0.2s',
   },
   logoutBtn: {
     padding: '10px 20px',
@@ -145,17 +132,6 @@ const styles = {
     fontSize: '15px',
     color: '#dc3545',
     fontWeight: '500',
-    transition: 'all 0.2s',
-  },
-  signupBtn: {
-    padding: '10px 20px',
-    border: 'none',
-    borderRadius: '6px',
-    backgroundColor: '#007bff',
-    color: '#ffffff',
-    cursor: 'pointer',
-    fontSize: '15px',
-    fontWeight: '600',
     transition: 'all 0.2s',
   },
   main: {
@@ -191,17 +167,6 @@ const styles = {
     cursor: 'pointer',
     transition: 'all 0.2s',
   },
-  secondaryBtn: {
-    padding: '14px 32px',
-    border: '2px solid #007bff',
-    borderRadius: '8px',
-    backgroundColor: '#ffffff',
-    color: '#007bff',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-  },
 };
 
-export default LandingPage;
+export default AdminDashboardPage;

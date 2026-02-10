@@ -172,7 +172,10 @@ function SignupPage() {
       navigate('/');
     } catch (error) {
       console.error('회원가입 실패:', error);
-      alert(error.response?.data || '회원가입에 실패했습니다');
+      const errorMessage = typeof error.response?.data === 'string' 
+        ? error.response.data 
+        : error.response?.data?.message || '회원가입에 실패했습니다';
+      alert(errorMessage);
     }
   };
 
@@ -408,7 +411,7 @@ function SignupPage() {
 
             <p style={styles.loginLink}>
               이미 계정이 있으신가요?{' '}
-              <span onClick={() => alert('로그인 페이지는 준비중입니다')} style={styles.link}>
+              <span onClick={() => navigate('/login')} style={styles.link}>
                 로그인
               </span>
             </p>

@@ -34,8 +34,9 @@ public class Users {
     @Column(name = "approval_status", nullable = false)
     private ApprovalStatus approvalStatus; // PENDING, APPROVED, REJECTED
 
-    @Column(name = "verification_image_url")
-    private String verificationImageUrl; // 증빙 사진 URL
+    @Lob
+    @Column(name = "verification_image_url", columnDefinition = "LONGTEXT")
+    private String verificationImageUrl; // 증빙 사진 URL (base64 이미지 데이터)
 
     // Foreign key 넣는 방법
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,12 +44,13 @@ public class Users {
     private Store store;      // store이라는 객체 생성. 그리고 그 객체 자체를 하나의 데이터로 갖고 있는 것. FK
 
     // 생성자
-    public Users(String userName, String loginId, String password, UsersRole usersRole, Store store) {
+    public Users(String userName, String loginId, String password, UsersRole usersRole, String verificationImageUrl, Store store) {
         this.userName = userName;
         this.loginId = loginId;
         this.password = password;
         this.usersRole = usersRole;
         this.approvalStatus = ApprovalStatus.PENDING; // 기본값: 대기 중
+        this.verificationImageUrl = verificationImageUrl;
         this.store = store;
     }
 }
