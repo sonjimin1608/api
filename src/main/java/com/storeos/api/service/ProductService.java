@@ -7,6 +7,7 @@ import com.storeos.api.dto.CreateProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 @Transactional (readOnly = true)
@@ -43,5 +44,32 @@ public class ProductService {
     public void updateProductStatus(Long productId, ProductStatus status){
         Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("제품 없음"));
         product.changeProductStatus(status);
+    }
+
+    // 가게의 모든 상품 조회
+    public List<Product> getProductsByStoreId(Long storeId) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new RuntimeException("가게를 찾을 수 없습니다"));
+        List<Category> categories = categoryRepository.findByStore(store);
+        
+        return categories.stream()
+                .flatMap(category -> productRepository.findByCategory(category).stream())
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    // 상품 수정
+    @Transactional
+    public void updateProduct(Long productId, String productName, Integer productPrice) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("제품 없음"));
+        product.updateProduct(productName, productPrice);
+    }
+
+    // 상품 삭제
+    @Transactional
+    public void deleteProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("제품 없음"));
+        productRepository.delete(product);
     }
 }

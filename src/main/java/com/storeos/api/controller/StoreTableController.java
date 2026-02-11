@@ -1,6 +1,7 @@
 package com.storeos.api.controller;
 
 import com.storeos.api.entity.StoreTable;
+import com.storeos.api.dto.*;
 import com.storeos.api.service.StoreTableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +28,8 @@ public class StoreTableController {
     @PutMapping("/{tableId}")
     public ResponseEntity<StoreTable> updateTable(
             @PathVariable Long tableId,
-            @RequestParam Integer coordX,
-            @RequestParam Integer coordY,
-            @RequestParam Integer width,
-            @RequestParam Integer height) {
-        StoreTable updated = storeTableService.updateTablePosition(tableId, coordX, coordY, width, height);
+            @RequestBody UpdateTablePositionRequest dto) {
+        StoreTable updated = storeTableService.updateTablePosition(tableId, dto);
         return ResponseEntity.ok(updated);
     }
 
@@ -39,12 +37,37 @@ public class StoreTableController {
     @PostMapping("/store/{storeId}")
     public ResponseEntity<StoreTable> createTable(
             @PathVariable Long storeId,
-            @RequestParam Integer coordX,
-            @RequestParam Integer coordY,
-            @RequestParam Integer width,
-            @RequestParam Integer height,
-            @RequestParam Integer people) {
-        StoreTable table = storeTableService.createTable(storeId, coordX, coordY, width, height, people);
+            @RequestBody CreateTableRequest dto) {
+        
+        System.out.println("===== 테이블 생성 요청 =====");
+        System.out.println("storeId: " + storeId);
+        System.out.println("coordX: " + dto.getCoordX());
+        System.out.println("coordY: " + dto.getCoordY());
+        System.out.println("width: " + dto.getWidth());
+        System.out.println("height: " + dto.getHeight());
+        
+        StoreTable table = storeTableService.createTable(storeId, 
+                                                        dto.getCoordX(),
+                                                        dto.getCoordY(),
+                                                        dto.getWidth(),
+                                                        dto.getHeight(),
+                                                        2); // 기본으로 사람 2명
         return ResponseEntity.ok(table);
+    }
+
+    // 테이블 상세 정보 업데이트 (좌표, 크기, 인원)
+    @PutMapping("/{tableId}/details")
+    public ResponseEntity<StoreTable> updateTableDetails(
+            @PathVariable Long tableId,
+            @RequestBody UpdateTableDetailsRequest dto) {
+        StoreTable updated = storeTableService.updateTableDetails(tableId, dto);
+        return ResponseEntity.ok(updated);
+    }
+
+    // 테이블 삭제
+    @DeleteMapping("/{tableId}")
+    public ResponseEntity<Void> deleteTable(@PathVariable Long tableId) {
+        storeTableService.deleteTable(tableId);
+        return ResponseEntity.ok().build();
     }
 }

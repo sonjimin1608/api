@@ -40,4 +40,26 @@ public class ProductController {
         productService.updateProductStatus(productId, status);
         return ResponseEntity.ok().build();
     }
+
+    // 4. 가게의 모든 상품 조회
+    @GetMapping("/stores/{storeId}/products")
+    public ResponseEntity<?> getProductsByStore(@PathVariable Long storeId) {
+        return ResponseEntity.ok(productService.getProductsByStoreId(storeId));
+    }
+
+    // 5. 상품 수정
+    @PutMapping("/products/{productId}")
+    public ResponseEntity<Void> updateProduct(@PathVariable Long productId,
+                                             @RequestParam String productName,
+                                             @RequestParam Integer productPrice) {
+        productService.updateProduct(productId, productName, productPrice);
+        return ResponseEntity.ok().build();
+    }
+
+    // 6. 상품 삭제
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.ok().build();
+    }
 }

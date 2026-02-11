@@ -15,6 +15,9 @@ public class StoreTable {
     @Column(name = "table_id")
     private Long tableId;
 
+    @Column(name = "table_number")
+    private Integer tableNumber;  // 가게별 테이블 번호 (1, 2, 3, ...)
+
     @Column(name = "coord_X")
     private Integer coordX;
 
@@ -38,7 +41,8 @@ public class StoreTable {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    public StoreTable(Integer coordX, Integer coordY, Integer tableWidth, Integer tableHeight, Integer tablePeople, Store store){
+    public StoreTable(Integer tableNumber, Integer coordX, Integer coordY, Integer tableWidth, Integer tableHeight, Integer tablePeople, Store store){
+        this.tableNumber = tableNumber;
         this.coordX = coordX;
         this.coordY = coordY;
         this.tableWidth = tableWidth;
@@ -62,5 +66,14 @@ public class StoreTable {
         this.coordY = coordY;
         this.tableWidth = width;
         this.tableHeight = height;
+    }
+    // 테이블 상세 정보 업데이트
+    public void updateDetails(Integer tableNumber,Integer coordX, Integer coordY, Integer width, Integer height, Integer people) {
+        this.tableNumber = tableNumber;
+        this.coordX = coordX;
+        this.coordY = coordY;
+        this.tableWidth = width;
+        this.tableHeight = height;
+        this.tablePeople = people;
     }
 }

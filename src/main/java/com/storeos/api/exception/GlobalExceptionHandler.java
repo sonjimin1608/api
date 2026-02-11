@@ -14,6 +14,9 @@ public class GlobalExceptionHandler {
     // 1. 우리가 의도적으로 발생시킨 에러 (throw new RuntimeException("..."))
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException e) {
+        System.err.println("❌ RuntimeException 발생: " + e.getMessage());
+        e.printStackTrace();
+        
         Map<String, String> response = new HashMap<>();
         response.put("error_type", "비즈니스 로직 에러");
         response.put("message", e.getMessage()); // "가게 없음", "재고 부족" 등 우리가 적은 메시지
@@ -24,12 +27,13 @@ public class GlobalExceptionHandler {
     // 2. 알 수 없는 시스템 에러 (NullPointerException 등)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleException(Exception e) {
+        System.err.println("❌❌❌ Exception 발생: " + e.getClass().getName() + " - " + e.getMessage());
+        e.printStackTrace();
+        
         Map<String, String> response = new HashMap<>();
         response.put("error_type", "시스템 에러");
-        response.put("message", "서버 관리자에게 문의하세요."); // 사용자를 안심시키는 메시지
-
-        // 서버 로그에는 진짜 에러를 남겨둠 (개발자가 봐야 하니까)
-        e.printStackTrace(); 
+        response.put("message", "서버 에러: " + e.getMessage()); // 개발 중이므로 실제 메시지 보여주기
+        response.put("exception", e.getClass().getSimpleName());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }

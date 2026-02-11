@@ -40,4 +40,9 @@ public class Product {
     public void changeProductStatus(ProductStatus status){
         this.productStatus = status;
     }
+
+    public void updateProduct(String productName, Integer productPrice) {
+        this.productName = productName;
+        this.productPrice = productPrice;
+    }
 }

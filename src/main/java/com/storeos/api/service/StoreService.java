@@ -47,17 +47,7 @@ public class StoreService {
         return storeCode; // ID 대신 코드 반환
     }
 
-    // 2. 테이블 생성
-    @Transactional
-    public Long createTable(Long storeId){
-        Store store = storeRepository.findById(storeId).orElseThrow(() -> new RuntimeException("가게 없음"));
-        StoreTable storeTable = new StoreTable(0, 0, 100, 100, 2, store);
-        storeTableRepository.save(storeTable);
-
-        return storeTable.getTableId();
-    }
-
-    // 3. 가게 정보 수정
+    // 2. 가게 정보 수정
     @Transactional
     public void updateStoreInfo(UpdateStoreRequest dto, Long storeId){
         Store store = storeRepository.findById(storeId).orElseThrow(() -> new RuntimeException("가게 없음"));
