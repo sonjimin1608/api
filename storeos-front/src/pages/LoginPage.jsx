@@ -53,6 +53,8 @@ function LoginPage() {
       // 역할에 따라 다른 페이지로 이동
       if (response.data.role === 'ADMIN') {
         navigate('/admin'); // 관리자는 admin 대시보드로
+      } else if (response.data.role === 'MANAGER') {
+        navigate('/pos'); // 매니저는 POS 화면으로
       } else {
         navigate('/'); // 일반 사용자는 메인 페이지로
       }

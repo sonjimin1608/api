@@ -55,4 +55,12 @@ public class StoreTable {
     public void clearTable() {
         this.tableStatus = TableStatus.EMPTY;
     }
+
+    // 테이블 위치 및 크기 업데이트
+    public void updatePosition(Integer coordX, Integer coordY, Integer width, Integer height) {
+        this.coordX = coordX;
+        this.coordY = coordY;
+        this.tableWidth = width;
+        this.tableHeight = height;
+    }
 }

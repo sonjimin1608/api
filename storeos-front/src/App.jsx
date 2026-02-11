@@ -6,6 +6,7 @@ import StorePage from './pages/StorePage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminApprovalPage from './pages/AdminApprovalPage';
 import ManagerApprovalPage from './pages/ManagerApprovalPage';
+import POSPage from './pages/POSPage';
 
 function App() {
   return (
@@ -31,6 +32,9 @@ function App() {
 
         {/* 7. 매니저 직원 승인 화면 (Manager only) */}
         <Route path="/manager/approvals" element={<ManagerApprovalPage />} />
+
+        {/* 8. POS 화면 (Manager only) */}
+        <Route path="/pos" element={<POSPage />} />
       </Routes>
     </BrowserRouter>
   );
