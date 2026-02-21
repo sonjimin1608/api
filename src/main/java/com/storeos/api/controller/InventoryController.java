@@ -1,6 +1,7 @@
 package com.storeos.api.controller;
 
 import com.storeos.api.dto.CreateIngredientRequest;
+import com.storeos.api.dto.UpdateIngredientRequest;
 import com.storeos.api.service.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,10 +41,8 @@ public class InventoryController {
     // 4. 재료 수정
     @PutMapping("/ingredients/{ingredientId}")
     public ResponseEntity<Void> updateIngredient(@PathVariable Long ingredientId,
-                                                @RequestParam String ingredientName,
-                                                @RequestParam Double ingredientStock,
-                                                @RequestParam String ingredientUnit) {
-        ingredientService.updateIngredient(ingredientId, ingredientName, ingredientStock, ingredientUnit);
+                                                @RequestBody UpdateIngredientRequest dto) {
+        ingredientService.updateIngredient(ingredientId, dto);
         return ResponseEntity.ok().build();
     }
 

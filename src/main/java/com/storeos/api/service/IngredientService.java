@@ -3,6 +3,8 @@ package com.storeos.api.service;
 import com.storeos.api.entity.*;
 import com.storeos.api.repository.*;
 import com.storeos.api.dto.CreateIngredientRequest;
+import com.storeos.api.dto.UpdateIngredientRequest;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,13 +52,10 @@ public class IngredientService {
 
     // 재료 수정
     @Transactional
-    public void updateIngredient(Long ingredientId, String ingredientName, 
-                                Double ingredientStock, String ingredientUnit) {
-        System.out.println("=== 재료 수정 - 받은 ingredientStock: " + ingredientStock + " (타입: " + ingredientStock.getClass().getName() + ")");
+    public void updateIngredient(Long ingredientId, UpdateIngredientRequest dto) {
         Ingredient ingredient = ingredientRepository.findById(ingredientId)
                 .orElseThrow(() -> new RuntimeException("재료 없음"));
-        ingredient.updateIngredient(ingredientName, ingredientStock, ingredientUnit);
-        System.out.println("=== 수정 후 재료 ID: " + ingredient.getIngredientId() + ", currentStock: " + ingredient.getCurrentStock());
+        ingredient.updateIngredient(dto.getIngredientName(), dto.getCurrentStock(), dto.getUnit());
     }
 
     // 재료 삭제
