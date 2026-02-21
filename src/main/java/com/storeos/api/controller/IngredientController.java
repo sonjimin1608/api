@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 @CrossOrigin(origins = "http://localhost:5173")
 @RequiredArgsConstructor
-public class InventoryController {
+public class IngredientController {
 
     private final IngredientService ingredientService;
 
