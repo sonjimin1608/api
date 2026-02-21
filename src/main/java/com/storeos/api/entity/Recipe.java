@@ -32,7 +32,7 @@ public class Recipe {
         this.ingredient = ingredient;
     }
     
-    public void setQuantity(Integer quantity){
+    public void updateQuantity(Integer quantity){
         this.quantity = quantity;
     }
 }

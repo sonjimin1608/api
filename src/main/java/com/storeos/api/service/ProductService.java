@@ -2,12 +2,13 @@ package com.storeos.api.service;
 
 import com.storeos.api.entity.*;
 import com.storeos.api.repository.*;
-import com.storeos.api.dto.CreateCategoryRequest;
 import com.storeos.api.dto.CreateProductRequest;
+import com.storeos.api.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional (readOnly = true)
@@ -17,15 +18,6 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final StoreRepository storeRepository;
-
-    @Transactional
-    public Long createCategory(CreateCategoryRequest dto, Long storeId){
-        Store store = storeRepository.findById(storeId).orElseThrow(() -> new RuntimeException("가게 없음"));
-        Category category = new Category(dto.getCategoryName(), store);
-        categoryRepository.save(category);
-
-        return category.getCategoryId();
-    }
 
     @Transactional
     public Long registerProduct(CreateProductRequest dto, Long CategoryId){
@@ -47,14 +39,22 @@ public class ProductService {
     }
 
     // 가게의 모든 상품 조회
-    public List<Product> getProductsByStoreId(Long storeId) {
+    public List<ProductResponse> getProductsByStoreId(Long storeId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new RuntimeException("가게를 찾을 수 없습니다"));
         List<Category> categories = categoryRepository.findByStore(store);
         
+        // Product 엔티티를 ProductResponse DTO로 변환
         return categories.stream()
                 .flatMap(category -> productRepository.findByCategory(category).stream())
-                .collect(java.util.stream.Collectors.toList());
+                .map(product -> new ProductResponse(
+                        product.getProductId(),
+                        product.getProductName(),
+                        product.getProductPrice(),
+                        product.getProductStatus(),
+                        product.getCategory().getCategoryId()
+                ))
+                .collect(Collectors.toList());
     }
 
     // 상품 수정

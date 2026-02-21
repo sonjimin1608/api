@@ -27,4 +27,9 @@ public class Category {
         this.categoryName = categoryName;
         this.store = store;
     }
+
+    // 카테고리 이름 업데이트
+    public void updateCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }

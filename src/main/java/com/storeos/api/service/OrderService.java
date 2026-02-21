@@ -19,7 +19,7 @@ public class OrderService {
     private final StoreTableRepository storeTableRepository;
     private final ProductRepository productRepository;
     private final OrderDetailRepository orderDetailRepository;
-    private final InventoryService inventoryService;
+    private final RecipeService recipeService;
 
     // 1. 주문 생성 (빈 주문서 만들기)
     @Transactional
@@ -43,7 +43,7 @@ public class OrderService {
         OrderDetail orderDetail = new OrderDetail(dto.getQuantity(), orders, product);
         orderDetailRepository.save(orderDetail);
 
-        inventoryService.decreaseStock(dto.getProductId(), dto.getQuantity());
+        recipeService.decreaseStockByRecipe(dto.getProductId(), dto.getQuantity());
     }
     // 3. 결제하기
     @Transactional

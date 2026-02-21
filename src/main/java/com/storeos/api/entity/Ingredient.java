@@ -46,5 +46,12 @@ public class Ingredient {
         }
         this.currentStock = restStock;
     }
+
+    // 재료 정보 업데이트
+    public void updateIngredient(String ingredientName, Integer currentStock, String unit) {
+        this.ingredientName = ingredientName;
+        this.currentStock = currentStock;
+        this.unit = unit;
+    }
     
 }
