@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor // 기본 생성자 (나중에 JSON 변환할 때 필수)
 public class CreateIngredientRequest {
     private String ingredientName;
-    private Integer currentStock;
+    private Double currentStock;
     private String unit;
 }

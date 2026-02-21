@@ -228,15 +228,30 @@ function LandingPage() {
 
   const handleAddIngredient = async (e) => {
     e.preventDefault();
-    if (!user?.storeId) return;
+    console.log('=== handleAddIngredient 실행 ===');
+    console.log('입력값:', ingredientFormData);
+    
+    if (!user?.storeId) {
+      console.log('에러: storeId 없음');
+      return;
+    }
 
     try {
-      await api.post(`/stores/${user.storeId}/ingredients`, {
+      const stockValue = parseFloat(ingredientFormData.ingredientStock);
+      console.log('전송할 재고량:', stockValue, typeof stockValue);
+      console.log('전송할 데이터:', {
         ingredientName: ingredientFormData.ingredientName,
-        currentStock: parseInt(ingredientFormData.ingredientStock),
+        currentStock: stockValue,
         unit: ingredientFormData.ingredientUnit
       });
       
+      const response = await api.post(`/stores/${user.storeId}/ingredients`, {
+        ingredientName: ingredientFormData.ingredientName,
+        currentStock: stockValue,
+        unit: ingredientFormData.ingredientUnit
+      });
+      
+      console.log('응답:', response);
       alert('재료가 추가되었습니다');
       setShowAddIngredientModal(false);
       setIngredientFormData({ ingredientName: '', ingredientStock: '', ingredientUnit: '' });
@@ -244,29 +259,45 @@ function LandingPage() {
     } catch (error) {
       console.error('재료 추가 실패:', error);
       console.error('에러 상세:', error.response?.data);
+      console.error('에러 상세:', error.response?.data);
       alert('재료 추가에 실패했습니다: ' + (error.response?.data?.message || error.message));
     }
   };
 
   const handleEditIngredient = async (e) => {
     e.preventDefault();
-    if (!editingIngredient) return;
+    console.log('=== handleEditIngredient 실행 ===');
+    console.log('입력값:', ingredientFormData);
+    console.log('editingIngredient:', editingIngredient);
+    
+    if (!editingIngredient) {
+      console.log('에러: editingIngredient 없음');
+      return;
+    }
 
     try {
+      const stockValue = parseFloat(ingredientFormData.ingredientStock);
+      console.log('수정할 재고량:', stockValue, typeof stockValue);
+      
       const params = new URLSearchParams({
         ingredientName: ingredientFormData.ingredientName,
-        ingredientStock: ingredientFormData.ingredientStock,
+        ingredientStock: stockValue,
         ingredientUnit: ingredientFormData.ingredientUnit
       });
 
-      await api.put(`/ingredients/${editingIngredient.ingredientId}?${params.toString()}`);
+      const url = `/ingredients/${editingIngredient.ingredientId}?${params.toString()}`;
+      console.log('전송할 URL:', url);
       
+      const response = await api.put(url);
+      
+      console.log('응답:', response);
       alert('재료가 수정되었습니다');
       setEditingIngredient(null);
       setIngredientFormData({ ingredientName: '', ingredientStock: '', ingredientUnit: '' });
       fetchIngredients(user.storeId);
     } catch (error) {
       console.error('재료 수정 실패:', error);
+      console.error('에러 상세:', error.response?.data);
       alert('재료 수정에 실패했습니다');
     }
   };
@@ -329,10 +360,36 @@ function LandingPage() {
       return;
     }
 
+    // 이미 레시피가 있는 상품인지 확인
+    const productRecipes = recipes.filter(r => r.productId === parseInt(recipeFormData.productId));
+    if (productRecipes.length > 0) {
+      if (!confirm('이 상품에는 이미 레시피가 있습니다. 기존 레시피를 덮어쓰고 새로 추가하시겠습니까?')) {
+        return;
+      }
+      // 수정 모드로 전환
+      try {
+        const recipes = recipeFormData.recipeItems.map(item => ({
+          ingredientId: parseInt(item.ingredientId),
+          quantity: parseFloat(item.quantity)
+        }));
+
+        await api.put(`/products/${recipeFormData.productId}/recipes`, recipes);
+        
+        alert('레시피가 수정되었습니다');
+        setShowAddRecipeModal(false);
+        setRecipeFormData({ productId: '', recipeItems: [{ ingredientId: '', quantity: '' }] });
+        fetchRecipes(user.storeId);
+      } catch (error) {
+        console.error('레시피 수정 실패:', error);
+        alert('레시피 수정에 실패했습니다');
+      }
+      return;
+    }
+
     try {
       const recipes = recipeFormData.recipeItems.map(item => ({
         ingredientId: parseInt(item.ingredientId),
-        quantity: parseInt(item.quantity)
+        quantity: parseFloat(item.quantity)
       }));
 
       await api.post(`/products/${recipeFormData.productId}/recipes`, recipes);
@@ -343,7 +400,7 @@ function LandingPage() {
       fetchRecipes(user.storeId);
     } catch (error) {
       console.error('레시피 추가 실패:', error);
-      alert('레시피 추가에 실패했습니다');
+      alert(error.response?.data?.message || '레시피 추가에 실패했습니다');
     }
   };
 
@@ -361,7 +418,7 @@ function LandingPage() {
     try {
       const recipes = recipeFormData.recipeItems.map(item => ({
         ingredientId: parseInt(item.ingredientId),
-        quantity: parseInt(item.quantity)
+        quantity: parseFloat(item.quantity)
       }));
 
       await api.put(`/products/${editingRecipe}/recipes`, recipes);
@@ -385,7 +442,8 @@ function LandingPage() {
       fetchRecipes(user.storeId);
     } catch (error) {
       console.error('레시피 삭제 실패:', error);
-      alert('레시피 삭제에 실패했습니다');
+      console.error('에러 상세:', error.response?.data);
+      alert(error.response?.data?.message || error.response?.data || '레시피 삭제에 실패했습니다');
     }
   };
 
@@ -706,10 +764,9 @@ function LandingPage() {
                             <p style={styles.menuDesc}>레시피:</p>
                             <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
                               {productRecipes.map(recipe => {
-                                const ingredient = ingredients.find(i => i.ingredientId === recipe.ingredientId);
                                 return (
                                   <li key={recipe.recipeId} style={{ fontSize: '14px', marginBottom: '4px' }}>
-                                    {ingredient?.ingredientName || '재료'}: {recipe.quantity}
+                                    {recipe.ingredientName || '재료'}: {recipe.quantity}{recipe.unit}
                                   </li>
                                 );
                               })}
@@ -936,6 +993,7 @@ function LandingPage() {
               />
               <input
                 type="number"
+                step="any"
                 placeholder="재고량"
                 value={ingredientFormData.ingredientStock}
                 onChange={(e) => setIngredientFormData({...ingredientFormData, ingredientStock: e.target.value})}
@@ -1002,6 +1060,7 @@ function LandingPage() {
                   </select>
                   <input
                     type="number"
+                    step="any"
                     placeholder="필요량"
                     value={item.quantity}
                     onChange={(e) => updateRecipeItem(index, 'quantity', e.target.value)}
@@ -1070,6 +1129,7 @@ function LandingPage() {
                   </select>
                   <input
                     type="number"
+                    step="any"
                     placeholder="필요량"
                     value={item.quantity}
                     onChange={(e) => updateRecipeItem(index, 'quantity', e.target.value)}
@@ -1208,7 +1268,7 @@ const styles = {
   },
   activeTab: {
     color: '#007bff',
-    borderBottomColor: '#007bff',
+    borderBottom: '3px solid #007bff',
     fontWeight: '600',
   },
   titleSection: {

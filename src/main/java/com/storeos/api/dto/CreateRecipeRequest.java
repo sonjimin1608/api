@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor // 기본 생성자 (나중에 JSON 변환할 때 필수)
 public class CreateRecipeRequest {
-    private Integer quantity;
+    private Double quantity;
     private Long ingredientId;
     private Long productId;
 }

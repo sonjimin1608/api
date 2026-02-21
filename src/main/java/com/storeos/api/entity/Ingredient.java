@@ -19,7 +19,7 @@ public class Ingredient {
     private String ingredientName;
 
     @Column(name = "current_stock", nullable = false)
-    private Integer currentStock;
+    private Double currentStock;
 
     @Column(name = "unit", nullable = false)
     private String unit;
@@ -28,19 +28,19 @@ public class Ingredient {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    public Ingredient(String ingredientName, Integer currentStock, String unit, Store store){
+    public Ingredient(String ingredientName, Double currentStock, String unit, Store store){
         this.ingredientName = ingredientName;
         this.currentStock = currentStock;
         this.unit = unit;
         this.store = store;
     }
 
-    public void addStock(Integer amount){
+    public void addStock(Double amount){
         this.currentStock += amount;
     }
 
-    public void removeStock(Integer amount){
-        Integer restStock = this.currentStock - amount;
+    public void removeStock(Double amount){
+        Double restStock = this.currentStock - amount;
         if(restStock < 0){
             throw new RuntimeException("재료 부족 (현재: " + this.currentStock + ", 필요: " + amount + ")");
         }
@@ -48,7 +48,7 @@ public class Ingredient {
     }
 
     // 재료 정보 업데이트
-    public void updateIngredient(String ingredientName, Integer currentStock, String unit) {
+    public void updateIngredient(String ingredientName, Double currentStock, String unit) {
         this.ingredientName = ingredientName;
         this.currentStock = currentStock;
         this.unit = unit;

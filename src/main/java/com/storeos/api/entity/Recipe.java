@@ -16,7 +16,7 @@ public class Recipe {
     private Long recipeId;
 
     @Column(name = "quantity")
-    private Integer quantity;
+    private Double quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -26,13 +26,13 @@ public class Recipe {
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
 
-    public Recipe(Integer quantity, Product product, Ingredient ingredient){
+    public Recipe(Double quantity, Product product, Ingredient ingredient){
         this.quantity = quantity;
         this.product = product;
         this.ingredient = ingredient;
     }
     
-    public void updateQuantity(Integer quantity){
+    public void updateQuantity(Double quantity){
         this.quantity = quantity;
     }
 }

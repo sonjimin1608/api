@@ -32,7 +32,7 @@ public class InventoryController {
     // 3. 재고 추가
     @PatchMapping("/ingredients/{ingredientId}/add-stock")
     public ResponseEntity<Void> addStock(@PathVariable Long ingredientId,
-                                        @RequestParam Integer quantity) {
+                                        @RequestParam Double quantity) {
         ingredientService.addStock(quantity, ingredientId);
         return ResponseEntity.ok().build();
     }
@@ -41,7 +41,7 @@ public class InventoryController {
     @PutMapping("/ingredients/{ingredientId}")
     public ResponseEntity<Void> updateIngredient(@PathVariable Long ingredientId,
                                                 @RequestParam String ingredientName,
-                                                @RequestParam Integer ingredientStock,
+                                                @RequestParam Double ingredientStock,
                                                 @RequestParam String ingredientUnit) {
         ingredientService.updateIngredient(ingredientId, ingredientName, ingredientStock, ingredientUnit);
         return ResponseEntity.ok().build();

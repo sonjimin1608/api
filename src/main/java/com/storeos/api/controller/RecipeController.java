@@ -34,7 +34,7 @@ public class RecipeController {
     // 3. 레시피 수정
     @PutMapping("/recipes/{recipeId}")
     public ResponseEntity<Void> updateRecipe(@PathVariable Long recipeId,
-                                            @RequestParam Integer quantity) {
+                                            @RequestParam Double quantity) {
         recipeService.updateRecipe(recipeId, quantity);
         return ResponseEntity.ok().build();
     }

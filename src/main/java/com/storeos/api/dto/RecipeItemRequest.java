@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RecipeItemRequest {
     private Long ingredientId;
-    private Integer quantity;
+    private Double quantity;
 }

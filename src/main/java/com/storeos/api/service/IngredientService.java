@@ -18,6 +18,7 @@ public class IngredientService {
     // 재료 등록
     @Transactional
     public Long registerIngredient(CreateIngredientRequest dto, Long storeId) {
+        System.out.println("=== 재료 등록 - 받은 currentStock: " + dto.getCurrentStock() + " (타입: " + dto.getCurrentStock().getClass().getName() + ")");
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new RuntimeException("가게 없음"));
         Ingredient ingredient = new Ingredient(
@@ -28,6 +29,7 @@ public class IngredientService {
         );
 
         ingredientRepository.save(ingredient);
+        System.out.println("=== 저장된 재료 ID: " + ingredient.getIngredientId() + ", currentStock: " + ingredient.getCurrentStock());
         return ingredient.getIngredientId();
     }
 
@@ -40,7 +42,7 @@ public class IngredientService {
 
     // 재고 추가
     @Transactional
-    public void addStock(Integer willAddStock, Long ingredientId) {
+    public void addStock(Double willAddStock, Long ingredientId) {
         Ingredient ingredient = ingredientRepository.findById(ingredientId)
                 .orElseThrow(() -> new RuntimeException("재료 없음"));
         ingredient.addStock(willAddStock);
@@ -49,10 +51,12 @@ public class IngredientService {
     // 재료 수정
     @Transactional
     public void updateIngredient(Long ingredientId, String ingredientName, 
-                                Integer ingredientStock, String ingredientUnit) {
+                                Double ingredientStock, String ingredientUnit) {
+        System.out.println("=== 재료 수정 - 받은 ingredientStock: " + ingredientStock + " (타입: " + ingredientStock.getClass().getName() + ")");
         Ingredient ingredient = ingredientRepository.findById(ingredientId)
                 .orElseThrow(() -> new RuntimeException("재료 없음"));
         ingredient.updateIngredient(ingredientName, ingredientStock, ingredientUnit);
+        System.out.println("=== 수정 후 재료 ID: " + ingredient.getIngredientId() + ", currentStock: " + ingredient.getCurrentStock());
     }
 
     // 재료 삭제

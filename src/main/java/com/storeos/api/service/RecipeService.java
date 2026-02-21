@@ -18,7 +18,6 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final ProductRepository productRepository;
     private final IngredientRepository ingredientRepository;
-    private final StoreRepository storeRepository;
 
     // 레시피 생성
     @Transactional
@@ -35,9 +34,6 @@ public class RecipeService {
 
     // 가게의 모든 레시피 조회
     public List<RecipeResponse> getRecipesByStoreId(Long storeId) {
-        Store store = storeRepository.findById(storeId)
-                .orElseThrow(() -> new RuntimeException("가게를 찾을 수 없습니다"));
-        
         // 가게의 모든 상품을 찾고, 그 상품들의 레시피를 조회
         List<Recipe> recipes = recipeRepository.findByProductCategoryStoreStoreId(storeId);
         
@@ -47,14 +43,16 @@ public class RecipeService {
                         recipe.getRecipeId(),
                         recipe.getQuantity(),
                         recipe.getProduct().getProductId(),
-                        recipe.getIngredient().getIngredientId()
+                        recipe.getIngredient().getIngredientId(),
+                        recipe.getIngredient().getIngredientName(),
+                        recipe.getIngredient().getUnit()
                 ))
                 .collect(Collectors.toList());
     }
 
     // 레시피 수정
     @Transactional
-    public void updateRecipe(Long recipeId, Integer quantity) {
+    public void updateRecipe(Long recipeId, Double quantity) {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RuntimeException("레시피 없음"));
         recipe.updateQuantity(quantity);
@@ -77,7 +75,7 @@ public class RecipeService {
 
         for (Recipe recipe : recipes) {
             Ingredient ingredient = recipe.getIngredient();
-            int totalUsage = recipe.getQuantity() * quantity;
+            double totalUsage = recipe.getQuantity() * quantity;
             ingredient.removeStock(totalUsage);
         }
     }
@@ -87,6 +85,12 @@ public class RecipeService {
     public void createProductRecipes(Long productId, List<RecipeItemRequest> recipes) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품 없음"));
+        
+        // 기존 레시피가 있으면 에러 발생
+        List<Recipe> existingRecipes = recipeRepository.findByProduct(product);
+        if (!existingRecipes.isEmpty()) {
+            throw new RuntimeException("이미 레시피가 존재합니다. 수정 기능을 사용하세요.");
+        }
         
         for (RecipeItemRequest recipeItem : recipes) {
             Ingredient ingredient = ingredientRepository.findById(recipeItem.getIngredientId())
@@ -122,6 +126,10 @@ public class RecipeService {
                 .orElseThrow(() -> new RuntimeException("상품 없음"));
         
         List<Recipe> recipes = recipeRepository.findByProduct(product);
-        recipeRepository.deleteAll(recipes);
+        if (!recipes.isEmpty()) {
+            for (Recipe recipe : recipes) {
+                recipeRepository.delete(recipe);
+            }
+        }
     }
 }
